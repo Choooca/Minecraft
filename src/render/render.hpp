@@ -9,9 +9,9 @@ class Render
 public:
 	typedef struct
 	{
-		unsigned int *VAO;
-		unsigned int *VBO;
-		unsigned int *EBO;
+		unsigned int VAO;
+		unsigned int VBO;
+		unsigned int EBO;
 	} RenderData;
 
 	Render();
