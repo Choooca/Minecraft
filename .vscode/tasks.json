@@ -12,6 +12,7 @@
 				"-L${workspaceFolder}\\lib",
                 "${workspaceFolder}\\src\\main.cpp",
                 "${workspaceFolder}\\src\\glad.c",
+                "${workspaceFolder}\\src\\shader\\shader.cpp",
 				"-lmingw32", "-lSDL2main", "-lSDL2",
                 "-o",
                 "${workspaceFolder}\\Minecraft.exe"
