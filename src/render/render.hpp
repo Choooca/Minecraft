@@ -9,23 +9,25 @@ class Render
 public:
 	typedef struct
 	{
-		unsigned int VAO;
-		unsigned int VBO;
-		unsigned int EBO;
+		GLuint VAO;
+		GLuint VBO;
+		GLuint EBO;
 	} RenderData;
 
 	Render();
 
 	void RenderInit();
-	void RenderInitTriangles();
 	void RenderUpdate();
-	Shader *GetShader();
 	void DestroyRender();
 
-	RenderData *triangleRenderData;
+	RenderData *cubeRenderData = new RenderData;
+	RenderData *triangleRenderData = new RenderData;
 
 private:
 	Shader *shader;
 	SDL_Window *window;
 	SDL_GLContext context;
+
+	void RenderInitTriangles();
+	void RenderInitCube();
 };
