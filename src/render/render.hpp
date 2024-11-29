@@ -18,7 +18,10 @@ public:
 
 	void RenderInit();
 	void RenderUpdate();
-	void DestroyRender();
+	Shader *GetShader();
+	SDL_Window *GetWindow();
+
+	~Render();
 
 	RenderData *cubeRenderData = new RenderData;
 	RenderData *triangleRenderData = new RenderData;

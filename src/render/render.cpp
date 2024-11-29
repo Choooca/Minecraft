@@ -1,15 +1,18 @@
 #include "render.hpp"
+#include <string>
 
 Render::Render() {};
 
 void Render::RenderInit()
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-	window = SDL_CreateWindow("Minecraft", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	std::string title = "Minecraft";
+
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	if (!window)
 	{
 		std::cout << "Failed To Create Window : " << SDL_GetError() << std::endl;
@@ -34,6 +37,8 @@ void Render::RenderInit()
 	glViewport(0, 0, 800, 600);
 
 	shader = new Shader("C:/LearnCpp/Minecraft/shader/default.vert", "C:/LearnCpp/Minecraft/shader/default.frag");
+
+	glEnable(GL_DEPTH_TEST);
 
 	RenderInitCube();
 	RenderInitTriangles();
@@ -117,6 +122,9 @@ void Render::RenderInitCube()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
 	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -124,7 +132,7 @@ void Render::RenderInitCube()
 void Render::RenderUpdate()
 {
 	glClearColor(.1f, .1f, .1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBindVertexArray(cubeRenderData->VAO);
 	shader->use();
@@ -133,7 +141,17 @@ void Render::RenderUpdate()
 	SDL_GL_SwapWindow(window);
 }
 
-void Render::DestroyRender()
+Shader *Render::GetShader()
+{
+	return shader;
+}
+
+SDL_Window *Render::GetWindow()
+{
+	return window;
+}
+
+Render::~Render()
 {
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
