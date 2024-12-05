@@ -40,8 +40,26 @@ void Render::RenderInit()
 
 	glEnable(GL_DEPTH_TEST);
 
+	myCam = new Camera;
+
+	InitMatrix();
 	RenderInitCube();
 	RenderInitTriangles();
+}
+
+void Render::InitMatrix()
+{
+	projLoc = glGetUniformLocation(shader->ID, "projection");
+	modelLoc = glGetUniformLocation(shader->ID, "model");
+	viewLoc = glGetUniformLocation(shader->ID, "view");
+
+	projMat = glm::mat4(1.0f);
+	projMat = glm::perspective(glm::radians(60.0f), 800.f / 600.f, .1f, 100.f);
+
+	viewMat = glm::mat4(1.0f);
+	viewMat = glm::lookAt(Camera::current_cam->cam_pos, Camera::current_cam->cam_pos + Camera::current_cam->cam_fwd, Camera::current_cam->cam_up);
+
+	modelMat = glm::mat4(1.0f);
 }
 
 void Render::RenderInitTriangles()
@@ -131,6 +149,13 @@ void Render::RenderInitCube()
 
 void Render::RenderUpdate()
 {
+	viewMat = glm::mat4(1.0f);
+	viewMat = glm::lookAt(Camera::current_cam->cam_pos, Camera::current_cam->cam_pos + Camera::current_cam->cam_fwd, Camera::current_cam->cam_up);
+
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+
 	glClearColor(.1f, .1f, .1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

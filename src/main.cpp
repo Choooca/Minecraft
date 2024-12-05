@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "camera/camera.hpp"
 #include "render/render.hpp"
 #include <map>
 
@@ -26,22 +27,6 @@ int main(int argv, char **args)
 	std::map<int, bool> keys;
 
 	Shader *shader = render.GetShader();
-
-	glm::vec3 camPos = glm::vec3(0, 0, 3.0f);
-	glm::vec3 camFront = glm::vec3(0, 0, -1);
-	glm::vec3 camUp = glm::vec3(0, 1, 0);
-
-	unsigned int projLoc = glGetUniformLocation(shader->ID, "projection");
-	unsigned int modelLoc = glGetUniformLocation(shader->ID, "model");
-	unsigned int viewLoc = glGetUniformLocation(shader->ID, "view");
-
-	glm::mat4 projMat = glm::mat4(1.0f);
-	projMat = glm::perspective(glm::radians(60.0f), 800.f / 600.f, .1f, 100.f);
-
-	glm::mat4 viewMat = glm::mat4(1.0f);
-	viewMat = glm::lookAt(camPos, camPos + camFront, camUp);
-
-	glm::mat4 modelMat = glm::mat4(1.0f);
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
@@ -74,8 +59,6 @@ int main(int argv, char **args)
 
 	while (!quit)
 	{
-		int xMousePos, yMousePos;
-
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -103,7 +86,7 @@ int main(int argv, char **args)
 				direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 				direction.y = sin(glm::radians(pitch));
 				direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-				camFront = glm::normalize(direction);
+				Camera::current_cam->cam_fwd = glm::normalize(direction);
 				break;
 			default:
 				break;
@@ -115,20 +98,13 @@ int main(int argv, char **args)
 		lastTime = currentTime;
 
 		if (keys[SDLK_z])
-			camPos += camFront * 5.0f * deltaTime;
+			Camera::current_cam->cam_pos += Camera::current_cam->cam_fwd * 5.0f * deltaTime;
 		if (keys[SDLK_s])
-			camPos -= camFront * 5.0f * deltaTime;
+			Camera::current_cam->cam_pos -= Camera::current_cam->cam_fwd * 5.0f * deltaTime;
 		if (keys[SDLK_q])
-			camPos -= glm::cross(camFront, camUp) * 5.0f * deltaTime;
+			Camera::current_cam->cam_pos -= glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * deltaTime;
 		if (keys[SDLK_d])
-			camPos += glm::cross(camFront, camUp) * 5.0f * deltaTime;
-
-		viewMat = glm::mat4(1.0f);
-		viewMat = glm::lookAt(camPos, camPos + camFront, camUp);
-
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+			Camera::current_cam->cam_pos += glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * deltaTime;
 
 		if (event.type == SDL_QUIT)
 		{
