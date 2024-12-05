@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include "../shader/shader.hpp"
 #include "../camera/camera.hpp"
+#include <string>
+
+
 
 class Render
 {
@@ -23,6 +26,8 @@ public:
 	SDL_Window *GetWindow();
 
 	~Render();
+
+	unsigned int dirt_texture;
 
 	RenderData *cubeRenderData = new RenderData;
 	RenderData *triangleRenderData = new RenderData;
@@ -44,6 +49,6 @@ private:
 
 	void RenderInitTriangles();
 	void RenderInitCube();
-
+	void InitTexture(std::string path, unsigned int *texture);
 	void InitMatrix();
 };

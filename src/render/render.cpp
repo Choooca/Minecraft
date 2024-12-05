@@ -1,6 +1,9 @@
 #include "render.hpp"
 #include <string>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb_image.h"
+
 Render::Render() {};
 
 void Render::RenderInit()
@@ -42,9 +45,36 @@ void Render::RenderInit()
 
 	myCam = new Camera;
 
+	InitTexture("C://LearnCpp//Minecraft//textures//dirt.jpg", &dirt_texture);
 	InitMatrix();
 	RenderInitCube();
 	RenderInitTriangles();
+}
+
+void Render::InitTexture(std::string path, unsigned int *texture)
+{
+	glGenTextures(1, texture);
+	glBindTexture(GL_TEXTURE_2D, *texture);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int height, width;
+	unsigned char *data = stbi_load(path.c_str(), &width, &height, 0, 0);
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	stbi_image_free(data);
 }
 
 void Render::InitMatrix()
@@ -155,6 +185,9 @@ void Render::RenderUpdate()
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, dirt_texture);
 
 	glClearColor(.1f, .1f, .1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
