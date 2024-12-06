@@ -1,5 +1,6 @@
 #include "render.hpp"
 #include <string>
+#include "../block/block.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb_image.h"
@@ -192,9 +193,18 @@ void Render::RenderUpdate()
 	glClearColor(.1f, .1f, .1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindVertexArray(cubeRenderData->VAO);
-	shader->use();
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	Block::CreateBlock(glm::vec3(0, 0, 0));
+	Block::CreateBlock(glm::vec3(0, 1, 0));
+	Block::CreateBlock(glm::vec3(2, 1, 0));
+
+	for (Block *block : Block::list)
+	{
+		glBindVertexArray(cubeRenderData->VAO);
+		modelMat = glm::translate(glm::mat4(1.0f), block->position);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+		shader->use();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 	SDL_GL_SwapWindow(window);
 }

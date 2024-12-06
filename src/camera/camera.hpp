@@ -2,6 +2,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+enum Direction
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 class Camera
 {
 public:
@@ -16,6 +24,10 @@ public:
 	static Camera *current_cam;
 	void InitCam();
 
+	static void MoveCam(Direction dir);
+
 private:
+	static bool already_init;
+
 	~Camera();
 };

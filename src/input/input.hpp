@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <SDL2/SDL.h>
+#include <functional>
 #include "../camera/camera.hpp"
 
 class Input
@@ -20,6 +21,8 @@ public:
 
 	bool ShouldQuit();
 
+	void RegisterCallback(int index, std::function<void()>);
+
 private:
 	Input();
 	void Init();
@@ -29,9 +32,11 @@ private:
 	static Input *instance;
 	float delta_time, last_time, current_time;
 
+	std::map<int, std::vector<std::function<void()>>> callbacks;
+
 	SDL_Event event;
 
-	bool quit;
+	void EmitCallback(int index);
 
-	void Test();
+	bool quit;
 };

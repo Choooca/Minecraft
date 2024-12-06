@@ -1,4 +1,5 @@
 #include <iostream>
+#include <SDL2/SDL.h>
 #include "render/render.hpp"
 #include "input/input.hpp"
 
@@ -12,6 +13,5 @@ int main(int argv, char **args)
 		Input::GetInstance()->InputLoop();
 		render.RenderUpdate();
 	}
-
 	return 0;
 }

@@ -16,6 +16,7 @@
                 "${workspaceFolder}\\src\\input\\input.cpp",
                 "${workspaceFolder}\\src\\render\\render.cpp",
                 "${workspaceFolder}\\src\\camera\\camera.cpp",
+                "${workspaceFolder}\\src\\block\\block.cpp",
 				"-lmingw32", "-lSDL2main", "-lSDL2",
                 "-o",
                 "${workspaceFolder}\\Minecraft.exe"

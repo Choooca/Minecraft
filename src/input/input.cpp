@@ -67,22 +67,16 @@ void Input::InputLoop()
 		}
 	};
 
-	if (keys[SDLK_z])
-		cam->cam_pos += Camera::current_cam->cam_fwd * 5.0f * delta_time;
-	if (keys[SDLK_s])
-		cam->cam_pos -= Camera::current_cam->cam_fwd * 5.0f * delta_time;
-	if (keys[SDLK_q])
-		cam->cam_pos -= glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * delta_time;
-	if (keys[SDLK_d])
-		cam->cam_pos += glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * delta_time;
+	for (size_t i = 97; i <= 122; i++)
+	{
+		if (keys[i])
+			EmitCallback(i);
+	}
 
 	if (event.type == SDL_QUIT)
 		quit = true;
-}
 
-void Input::Test()
-{
-	std::cout << "ca glisse" << std::endl;
+	std::cout << 1 / GetDeltaTime() << std::endl;
 }
 
 bool Input::ShouldQuit()
@@ -95,4 +89,17 @@ void Input::CalculateDeltaTime()
 	current_time = SDL_GetTicks();
 	delta_time = (current_time - last_time) / 1000.0f;
 	last_time = current_time;
+}
+
+void Input::RegisterCallback(int index, std::function<void()> func)
+{
+	callbacks[index].push_back(func);
+}
+
+void Input::EmitCallback(int index)
+{
+	for (auto &callback : callbacks[index])
+	{
+		callback();
+	}
 }
