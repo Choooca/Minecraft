@@ -11,6 +11,8 @@ public:
 	glm::vec3 cam_up;
 	glm::vec3 cam_fwd;
 
+	float pitch, yaw = 270;
+
 	static Camera *current_cam;
 	void InitCam();
 

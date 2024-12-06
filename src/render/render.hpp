@@ -6,8 +6,6 @@
 #include "../camera/camera.hpp"
 #include <string>
 
-
-
 class Render
 {
 public:

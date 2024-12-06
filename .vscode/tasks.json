@@ -13,6 +13,7 @@
                 "${workspaceFolder}\\src\\main.cpp",
                 "${workspaceFolder}\\src\\glad.c",
                 "${workspaceFolder}\\src\\shader\\shader.cpp",
+                "${workspaceFolder}\\src\\input\\input.cpp",
                 "${workspaceFolder}\\src\\render\\render.cpp",
                 "${workspaceFolder}\\src\\camera\\camera.cpp",
 				"-lmingw32", "-lSDL2main", "-lSDL2",
