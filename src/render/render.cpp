@@ -40,19 +40,10 @@ void Render::RenderInit()
 
 	glViewport(0, 0, 800, 600);
 
-	shader = new Shader("C:/LearnCpp/Minecraft/shader/default.vert", "C:/LearnCpp/Minecraft/shader/default.frag");
-
 	glEnable(GL_DEPTH_TEST);
-
-	myCam = new Camera;
-
-	InitTexture("C://LearnCpp//Minecraft//textures//dirt.jpg", &dirt_texture);
-	InitMatrix();
-	RenderInitCube();
-	RenderInitTriangles();
 }
 
-void Render::InitTexture(std::string path, unsigned int *texture)
+void InitTexture(std::string path, unsigned int *texture)
 {
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
@@ -78,34 +69,19 @@ void Render::InitTexture(std::string path, unsigned int *texture)
 	stbi_image_free(data);
 }
 
-void Render::InitMatrix()
-{
-	projLoc = glGetUniformLocation(shader->ID, "projection");
-	modelLoc = glGetUniformLocation(shader->ID, "model");
-	viewLoc = glGetUniformLocation(shader->ID, "view");
-
-	projMat = glm::mat4(1.0f);
-	projMat = glm::perspective(glm::radians(60.0f), 800.f / 600.f, .1f, 100.f);
-
-	viewMat = glm::mat4(1.0f);
-	viewMat = glm::lookAt(Camera::current_cam->cam_pos, Camera::current_cam->cam_pos + Camera::current_cam->cam_fwd, Camera::current_cam->cam_up);
-
-	modelMat = glm::mat4(1.0f);
-}
-
-void Render::RenderInitTriangles()
+void RenderInitTriangles(RenderData *render_data)
 {
 	float vertices[] = {
 		0.0f, .5f, 0.0f,
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f};
 
-	glGenVertexArrays(1, &triangleRenderData->VAO);
-	glGenBuffers(1, &triangleRenderData->VBO);
+	glGenVertexArrays(1, &render_data->VAO);
+	glGenBuffers(1, &render_data->VBO);
 
-	glBindVertexArray(triangleRenderData->VAO);
+	glBindVertexArray(render_data->VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, triangleRenderData->VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, render_data->VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
@@ -115,7 +91,7 @@ void Render::RenderInitTriangles()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Render::RenderInitCube()
+void RenderInitCube(RenderData *render_data)
 {
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -160,12 +136,13 @@ void Render::RenderInitCube()
 		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
 		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
 
-	glGenVertexArrays(1, &cubeRenderData->VAO);
-	glGenBuffers(1, &cubeRenderData->VBO);
+	glGenVertexArrays(1, &render_data->VAO);
+	glGenBuffers(1, &render_data->VBO);
 
-	glBindVertexArray(cubeRenderData->VAO);
+	glBindVertexArray(render_data->VAO);
+	glBindVertexArray(render_data->VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, cubeRenderData->VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, render_data->VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
@@ -178,40 +155,15 @@ void Render::RenderInitCube()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Render::RenderUpdate()
+void Render::BeginRender()
 {
-	viewMat = glm::mat4(1.0f);
-	viewMat = glm::lookAt(Camera::current_cam->cam_pos, Camera::current_cam->cam_pos + Camera::current_cam->cam_fwd, Camera::current_cam->cam_up);
-
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, dirt_texture);
-
 	glClearColor(.1f, .1f, .1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	Block::CreateBlock(glm::vec3(0, 0, 0));
-	Block::CreateBlock(glm::vec3(0, 1, 0));
-	Block::CreateBlock(glm::vec3(2, 1, 0));
-
-	for (Block *block : Block::list)
-	{
-		glBindVertexArray(cubeRenderData->VAO);
-		modelMat = glm::translate(glm::mat4(1.0f), block->position);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
-		shader->use();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-
-	SDL_GL_SwapWindow(window);
 }
 
-Shader *Render::GetShader()
+void Render::EndRender()
 {
-	return shader;
+	SDL_GL_SwapWindow(window);
 }
 
 SDL_Window *Render::GetWindow()

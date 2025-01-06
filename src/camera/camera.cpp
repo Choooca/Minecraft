@@ -36,19 +36,21 @@ void Camera::InitCam()
 
 void Camera::MoveCam(Direction dir)
 {
+	current_cam->last_pos = current_cam->cam_pos;
+
 	switch (dir)
 	{
 	case Up:
-		current_cam->cam_pos += Camera::current_cam->cam_fwd * 5.0f * Input::GetInstance()->GetDeltaTime();
+		current_cam->cam_pos += Camera::current_cam->cam_fwd * 20.0f * Input::GetInstance()->GetDeltaTime();
 		break;
 	case Down:
-		current_cam->cam_pos -= Camera::current_cam->cam_fwd * 5.0f * Input::GetInstance()->GetDeltaTime();
+		current_cam->cam_pos -= Camera::current_cam->cam_fwd * 20.0f * Input::GetInstance()->GetDeltaTime();
 		break;
 	case Right:
-		current_cam->cam_pos += glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * Input::GetInstance()->GetDeltaTime();
+		current_cam->cam_pos += glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 20.0f * Input::GetInstance()->GetDeltaTime();
 		break;
 	case Left:
-		current_cam->cam_pos -= glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 5.0f * Input::GetInstance()->GetDeltaTime();
+		current_cam->cam_pos -= glm::cross(Camera::current_cam->cam_fwd, Camera::current_cam->cam_up) * 20.0f * Input::GetInstance()->GetDeltaTime();
 		break;
 
 	default:

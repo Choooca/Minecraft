@@ -19,6 +19,8 @@ public:
 	glm::vec3 cam_up;
 	glm::vec3 cam_fwd;
 
+	glm::vec3 last_pos;
+
 	float pitch, yaw = 270;
 
 	static Camera *current_cam;
@@ -26,8 +28,8 @@ public:
 
 	static void MoveCam(Direction dir);
 
+	~Camera();
+
 private:
 	static bool already_init;
-
-	~Camera();
 };

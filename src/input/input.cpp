@@ -75,8 +75,6 @@ void Input::InputLoop()
 
 	if (event.type == SDL_QUIT)
 		quit = true;
-
-	std::cout << 1 / GetDeltaTime() << std::endl;
 }
 
 bool Input::ShouldQuit()

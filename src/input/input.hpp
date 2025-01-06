@@ -21,13 +21,13 @@ public:
 
 	bool ShouldQuit();
 
+	std::map<int, bool> keys;
 	void RegisterCallback(int index, std::function<void()>);
 
 private:
 	Input();
 	void Init();
 	void CalculateDeltaTime();
-	std::map<int, bool> keys;
 
 	static Input *instance;
 	float delta_time, last_time, current_time;
