@@ -28,11 +28,10 @@ float Input::GetDeltaTime()
 	return delta_time;
 }
 
-void Input::InputLoop()
+void Input::InputLoop(Camera &cam)
 {
 	CalculateDeltaTime();
 
-	Camera *cam = Camera::current_cam;
 	while (SDL_PollEvent(&event))
 	{
 		switch (event.type)
@@ -48,19 +47,19 @@ void Input::InputLoop()
 			break;
 		case SDL_MOUSEMOTION:
 
-			cam->yaw += event.motion.xrel * 10.0f * delta_time;
-			cam->pitch -= event.motion.yrel * 10.0f * delta_time;
+			cam.yaw += event.motion.xrel * 10.0f * delta_time;
+			cam.pitch -= event.motion.yrel * 10.0f * delta_time;
 
-			if (cam->pitch > 89.0f)
-				cam->pitch = 89.0f;
-			if (cam->pitch < -89.0f)
-				cam->pitch = -89.0f;
+			if (cam.pitch > 89.0f)
+				cam.pitch = 89.0f;
+			if (cam.pitch < -89.0f)
+				cam.pitch = -89.0f;
 
 			glm::vec3 direction;
-			direction.x = cos(glm::radians(cam->yaw)) * cos(glm::radians(cam->pitch));
-			direction.y = sin(glm::radians(cam->pitch));
-			direction.z = sin(glm::radians(cam->yaw)) * cos(glm::radians(cam->pitch));
-			Camera::current_cam->cam_fwd = glm::normalize(direction);
+			direction.x = cos(glm::radians(cam.yaw)) * cos(glm::radians(cam.pitch));
+			direction.y = sin(glm::radians(cam.pitch));
+			direction.z = sin(glm::radians(cam.yaw)) * cos(glm::radians(cam.pitch));
+			cam.fwd = glm::normalize(direction);
 			break;
 		default:
 			break;

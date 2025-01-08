@@ -18,7 +18,9 @@
                 "${workspaceFolder}\\src\\camera\\camera.cpp",
                 "${workspaceFolder}\\src\\block\\block.cpp",
                 "${workspaceFolder}\\src\\perlin\\perlin.cpp",
+                "${workspaceFolder}\\src\\chunkmanager\\chunkmanager.cpp",
                 "${workspaceFolder}\\src\\chunk\\chunk.cpp",
+                "${workspaceFolder}\\src\\MeshGenerator\\MeshGenerator.cpp",
 				"-lmingw32", "-lSDL2main", "-lSDL2",
                 "-o",
                 "${workspaceFolder}\\Minecraft.exe"

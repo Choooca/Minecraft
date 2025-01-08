@@ -1,26 +1,32 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <vector>
 #include "render/render.hpp"
 #include "input/input.hpp"
 #include "perlin/perlin.hpp"
 #include "block/block.hpp"
-#include "chunk/chunk.hpp"
+#include "chunkmanager/chunkmanager.hpp"
 #include "camera/camera.hpp"
+
+RenderData test;
+MVPMat my_mat;
+MVPLoc my_loc;
+Shader *shader;
 
 int main(int argv, char **args)
 {
 	Render render;
 	render.RenderInit();
 
-	new Camera();
+	Camera cam;
 
 	ChunkManager chunk_manager;
 
-	for (size_t i = 0; i < 3; i++)
+	for (size_t x = 0; x < 10; x++)
 	{
-		for (size_t j = 0; j < 3; j++)
+		for (size_t z = 0; z < 10; z++)
 		{
-			chunk_manager.GenerateChunk(i, j);
+			chunk_manager.GenerateChunk(x, z);
 		}
 	}
 
@@ -28,10 +34,11 @@ int main(int argv, char **args)
 	{
 		render.BeginRender();
 
-		Input::GetInstance()->InputLoop();
-		chunk_manager.Update();
+		Input::GetInstance()->InputLoop(cam);
+		chunk_manager.Update(cam);
 
 		render.EndRender();
 	}
+
 	return 0;
 }

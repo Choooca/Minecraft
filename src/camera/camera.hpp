@@ -15,21 +15,15 @@ class Camera
 public:
 	Camera();
 
-	glm::vec3 cam_pos;
-	glm::vec3 cam_up;
-	glm::vec3 cam_fwd;
+	glm::vec3 pos;
+	glm::vec3 up;
+	glm::vec3 fwd;
 
 	glm::vec3 last_pos;
 
 	float pitch, yaw = 270;
 
-	static Camera *current_cam;
 	void InitCam();
 
-	static void MoveCam(Direction dir);
-
-	~Camera();
-
-private:
-	static bool already_init;
+	void MoveCam(Direction dir);
 };

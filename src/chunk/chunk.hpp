@@ -1,75 +1,24 @@
 #pragma once
 #include "../perlin/perlin.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include "../block/block.hpp"
-#include "../camera/camera.hpp"
-#include "../shader/shader.hpp"
 #include "../render/render.hpp"
-#include <unordered_map>
+#include "../MeshGenerator/MeshGenerator.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 #include <array>
 
-struct Vec2Hash
-{
-	std::size_t operator()(const glm::vec2 &v) const
-	{
-		return std::hash<float>()(v.x) ^ (std::hash<float>()(v.y) << 1);
-	}
-};
-
-struct Vec2Equal
-{
-	bool operator()(const glm::vec2 &a, const glm::vec2 &b) const
-	{
-		return a.x == b.x && a.y == b.y;
-	}
-};
-
-struct Chunk
-{
-	int max_height;
-	std::array<Block, 256 * 16 * 16> map;
-};
-
-using ChunkMap = std::unordered_map<glm::vec2, Chunk, Vec2Hash, Vec2Equal>;
-
-class ChunkManager
+class Chunk
 {
 public:
-	ChunkMap chunk_map;
+	Chunk();
+	Chunk(int x_chunk, int y_chunk);
+	void Draw(Shader *shader);
 
-	void DestroyAroundPlayer();
-	void CreateAroundPlayer();
+	int map[256 * 16 * 16] = {0};
+	int max_height = -1;
 
-	void Update();
-
-	void GenerateChunk(int x_chunck, int y_chunck);
-	void DeleteChunk(int x_chunck, int y_chunck);
-
-	ChunkManager();
+	RenderData mesh_data;
 
 private:
-	struct MVPMat
-	{
-		glm::mat4 projection;
-		glm::mat4 view;
-		glm::mat4 model;
-	};
-	struct MVPLoc
-	{
-		unsigned int projection;
-		unsigned int model;
-		unsigned int view;
-	};
+	void GenerateMap();
 
-	void UpdateChunk();
-	void Render();
-	void RenderInit();
-
-	unsigned int dirt_texture;
-
-	Shader *shader;
-	MVPMat mvp_mat;
-	MVPLoc shader_loc;
-	RenderData cube_render_data;
+	int x_chunk, z_chunk;
 };

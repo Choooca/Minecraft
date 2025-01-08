@@ -11,6 +11,7 @@ typedef struct
 	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;
+	int n_vertices;
 } RenderData;
 
 void RenderInitCube(RenderData *render_data);

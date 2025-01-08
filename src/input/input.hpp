@@ -17,7 +17,7 @@ public:
 
 	float GetDeltaTime();
 
-	void InputLoop();
+	void InputLoop(Camera &cam);
 
 	bool ShouldQuit();
 
