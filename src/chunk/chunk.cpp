@@ -37,9 +37,36 @@ void Chunk::GenerateMap()
 			if (val > current_max_height)
 				current_max_height = val;
 
-			for (size_t y = 0; y < val; y++)
+			for (size_t y = 0; y < val - 1; y++)
 			{
 				map[x + z * 16 + y * 16 * 16] = 1;
+			}
+			map[x + z * 16 + ((int)val - 1) * 16 * 16] = 2;
+		}
+	}
+
+	int x_tree_pos = (std::rand() % 14) + 1;
+	int y_tree_pos = 0;
+	int z_tree_pos = (std::rand() % 14) + 1;
+
+	while (map[x_tree_pos + z_tree_pos * 16 + (y_tree_pos + 1) * 256] != 0)
+	{
+		y_tree_pos++;
+	}
+
+	if (y_tree_pos + 5 > current_max_height)
+		current_max_height = y_tree_pos + 5;
+
+	for (size_t i = y_tree_pos; i < y_tree_pos + 4; i++)
+		map[x_tree_pos + z_tree_pos * 16 + i * 256] = 3;
+
+	for (size_t x = x_tree_pos - 1; x <= x_tree_pos + 1; x++)
+	{
+		for (size_t z = z_tree_pos - 1; z <= z_tree_pos + 1; z++)
+		{
+			for (size_t y = y_tree_pos + 3; y <= y_tree_pos + 5; y++)
+			{
+				map[x + z * 16 + y * 256] = 4;
 			}
 		}
 	}

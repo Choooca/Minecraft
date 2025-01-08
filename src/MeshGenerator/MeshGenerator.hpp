@@ -2,6 +2,13 @@
 #include "../render/render.hpp"
 #include <vector>
 
+struct BlockType
+{
+	int top_tex;
+	int side_tex;
+	int bottom_tex;
+};
+
 void create_mesh(RenderData *render_data, int map[], size_t array_size, int grid_x_size, int grid_y_size, int grid_z_size);
 void add_face(std::vector<float> &vertices, const float face[], size_t face_size, glm::vec3 face_pos, float tex_index);
 float *translate_face(const float face[], size_t size, glm::vec3 translate_vec);

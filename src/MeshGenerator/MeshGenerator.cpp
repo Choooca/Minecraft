@@ -1,46 +1,62 @@
 #include "MeshGenerator.hpp"
 
+BlockType dirt = {0, 0, 0};
+BlockType grass = {1, 2, 0};
+BlockType leaf = {5, 5, 5};
+BlockType wood = {4, 3, 4};
+
+BlockType GetBlockType(int value)
+{
+	switch (value)
+	{
+	case 1:
+		return dirt;
+	case 2:
+		return grass;
+	case 3:
+		return wood;
+	case 4:
+		return leaf;
+
+	default:
+		return dirt;
+	}
+}
+
 void create_mesh(RenderData *render_data, int map[], size_t array_size, int grid_x_size, int grid_y_size, int grid_z_size)
 {
 	std::vector<float> vertices;
 
 	int face_size = sizeof(front_face) / sizeof(front_face[0]);
 
-	int count = 0;
-
 	for (size_t i = 0; i < array_size; i++)
 	{
 		if (map[i] == 0)
 			continue;
 
-		count++;
+		BlockType block_type = GetBlockType(map[i]);
 
 		int y = i / (grid_x_size * grid_z_size);
 		int z = (i - y * (grid_x_size * grid_z_size)) / grid_x_size;
 		int x = i - z * grid_x_size - y * (grid_x_size * grid_z_size);
 
-		bool is_grass = false;
-
 		if (y == grid_y_size - 1 || map[i + grid_x_size * grid_z_size] == 0)
-		{
-			add_face(vertices, top_face, face_size, glm::vec3(x, y, z), 1);
-			is_grass = true;
-		}
+			add_face(vertices, top_face, face_size, glm::vec3(x, y, z), block_type.top_tex);
 
 		if (y == 0 || map[i - grid_x_size * grid_z_size] == 0)
-			add_face(vertices, bottom_face, face_size, glm::vec3(x, y, z), 0);
+			add_face(vertices, bottom_face, face_size, glm::vec3(x, y, z), block_type.bottom_tex);
 
 		if (x == 0 || map[i - 1] == 0)
-			add_face(vertices, left_face, face_size, glm::vec3(x, y, z), is_grass ? 2 : 0);
+			add_face(vertices, left_face, face_size, glm::vec3(x, y, z), block_type.side_tex);
 
 		if (x == grid_x_size - 1 || map[i + 1] == 0)
-			add_face(vertices, right_face, face_size, glm::vec3(x, y, z), is_grass ? 2 : 0);
+			add_face(vertices, right_face, face_size, glm::vec3(x, y, z), block_type.side_tex);
 
 		if (z == grid_z_size - 1 || map[i + grid_x_size] == 0)
-			add_face(vertices, front_face, face_size, glm::vec3(x, y, z), is_grass ? 2 : 0);
+			add_face(vertices, front_face, face_size, glm::vec3(x, y, z), block_type.side_tex);
 
 		if (z == 0 || map[i - grid_x_size] == 0)
-			add_face(vertices, back_face, face_size, glm::vec3(x, y, z), is_grass ? 2 : 0);
+			add_face(vertices, back_face, face_size, glm::vec3(x, y, z), block_type.side_tex);
 	}
 
 	glGenVertexArrays(1, &render_data->VAO);
