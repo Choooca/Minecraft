@@ -21,5 +21,7 @@ public:
 private:
 	void GenerateMap();
 
+	void CreateTree();
+
 	int x_chunk, z_chunk;
 };

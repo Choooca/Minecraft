@@ -16,7 +16,7 @@ void ChunkManager::RenderInit()
 	shader_loc.view = glGetUniformLocation(shader->ID, "view");
 
 	mvp_mat.projection = glm::mat4(1.0f);
-	mvp_mat.projection = glm::perspective(glm::radians(60.0f), 800.f / 600.f, .1f, 1000.f);
+	mvp_mat.projection = glm::perspective(glm::radians(60.0f), 1920.f / 1080.f, .1f, 1000.f);
 }
 
 void ChunkManager::Update(Camera &cam)

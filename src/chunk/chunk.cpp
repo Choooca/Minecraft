@@ -45,31 +45,44 @@ void Chunk::GenerateMap()
 		}
 	}
 
-	int x_tree_pos = (std::rand() % 14) + 1;
+	max_height = current_max_height;
+
+	CreateTree();
+}
+void Chunk::CreateTree()
+{
+	int x_tree_pos = (std::rand() % 12) + 2;
 	int y_tree_pos = 0;
-	int z_tree_pos = (std::rand() % 14) + 1;
+	int z_tree_pos = (std::rand() % 12) + 2;
 
 	while (map[x_tree_pos + z_tree_pos * 16 + (y_tree_pos + 1) * 256] != 0)
 	{
 		y_tree_pos++;
 	}
 
-	if (y_tree_pos + 5 > current_max_height)
-		current_max_height = y_tree_pos + 5;
+	if (y_tree_pos + 7 > max_height)
+		max_height = y_tree_pos + 7;
 
 	for (size_t i = y_tree_pos; i < y_tree_pos + 4; i++)
 		map[x_tree_pos + z_tree_pos * 16 + i * 256] = 3;
 
-	for (size_t x = x_tree_pos - 1; x <= x_tree_pos + 1; x++)
+	for (size_t x = x_tree_pos - 2; x <= x_tree_pos + 2; x++)
 	{
-		for (size_t z = z_tree_pos - 1; z <= z_tree_pos + 1; z++)
+		for (size_t z = z_tree_pos - 2; z <= z_tree_pos + 2; z++)
 		{
-			for (size_t y = y_tree_pos + 3; y <= y_tree_pos + 5; y++)
+			for (size_t y = y_tree_pos + 3; y <= y_tree_pos + 4; y++)
 			{
 				map[x + z * 16 + y * 256] = 4;
 			}
 		}
 	}
 
-	max_height = current_max_height;
+	for (size_t y = y_tree_pos + 5; y <= y_tree_pos + 6; y++)
+	{
+		map[x_tree_pos + z_tree_pos * 16 + y * 256] = 4;
+		map[x_tree_pos - 1 + z_tree_pos * 16 + y * 256] = 4;
+		map[x_tree_pos + 1 + z_tree_pos * 16 + y * 256] = 4;
+		map[x_tree_pos + (z_tree_pos + 1) * 16 + y * 256] = 4;
+		map[x_tree_pos + (z_tree_pos - 1) * 16 + y * 256] = 4;
+	}
 }

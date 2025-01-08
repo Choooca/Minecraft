@@ -112,7 +112,7 @@ void Render::RenderInit()
 
 	std::string title = "Minecraft";
 
-	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_OPENGL);
 	if (!window)
 	{
 		std::cout << "Failed To Create Window : " << SDL_GetError() << std::endl;
@@ -138,7 +138,7 @@ void Render::RenderInit()
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(GLDebugMessageCallback, NULL);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1920, 1080);
 
 	glEnable(GL_DEPTH_TEST);
 }
